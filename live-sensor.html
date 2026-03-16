@@ -1,0 +1,627 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VitalSync | Live Sensor Analysis</title>
+  <meta name="description" content="Real-time sensor data from ESP8266 — ECG, Temperature, Humidity, Accelerometer live dashboard.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/chatbot.css">
+  <style>
+    /* ── Live Sensor Page Styles ─────────────────────────────── */
+    .live-page { background: #0D0D14; min-height: 100vh; padding-bottom: 60px; }
+
+    /* Connect Banner */
+    .connect-banner {
+      background: linear-gradient(135deg, rgba(91,91,214,0.12) 0%, rgba(13,13,20,0) 100%);
+      border-bottom: 1px solid rgba(91,91,214,0.2);
+      padding: 16px 0;
+    }
+    .connect-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 24px;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .connect-inner label { color: rgba(255,255,255,0.55); font-size: 0.875rem; white-space: nowrap; }
+    .connect-inner input {
+      flex: 1; min-width: 180px; max-width: 260px;
+      background: rgba(255,255,255,0.06); border: 1.5px solid rgba(91,91,214,0.3);
+      border-radius: 10px; padding: 8px 14px; color: #fff;
+      font-family: 'DM Mono', monospace; font-size: 0.875rem; outline: none;
+      transition: border-color 0.2s;
+    }
+    .connect-inner input:focus { border-color: var(--color-primary); }
+    .connect-inner input::placeholder { color: rgba(255,255,255,0.2); }
+    .btn-connect {
+      background: var(--color-primary); color: #fff; border: none;
+      border-radius: 10px; padding: 9px 20px; font-size: 0.875rem;
+      font-weight: 600; cursor: pointer; transition: background 0.15s, transform 0.1s;
+    }
+    .btn-connect:hover { background: #4a4ac0; transform: translateY(-1px); }
+    .btn-connect:disabled { background: #3a3a6a; cursor: not-allowed; transform: none; }
+    .status-pill {
+      display: flex; align-items: center; gap: 7px;
+      padding: 6px 14px; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.02em;
+      border: 1.5px solid rgba(255,255,255,0.08);
+    }
+    .status-pill.disconnected { color: rgba(255,255,255,0.35); }
+    .status-pill.connecting   { color: #f59e0b; border-color: rgba(245,158,11,0.3); }
+    .status-pill.connected    { color: #4ade80; border-color: rgba(74,222,128,0.35); }
+    .status-pill .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+    .status-pill.connected .dot { animation: pulse-dot 1.5s infinite; }
+
+    /* Page header */
+    .live-header {
+      max-width: 1200px; margin: 0 auto; padding: 28px 24px 0;
+      display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .live-header h1 { font-size: 1.5rem; color: #fff; margin: 0; }
+    .live-header p  { color: rgba(255,255,255,0.4); font-size: 0.875rem; margin: 4px 0 0; }
+    .live-header .esp-ip { font-family: 'DM Mono', monospace; color: var(--color-secondary); font-size: 0.8rem; margin-top: 6px; }
+    .sample-rate { font-size: 0.75rem; color: rgba(255,255,255,0.3); text-align: right; }
+    #sample-count { color: var(--color-primary); font-weight: 700; }
+
+    /* Grid layout */
+    .live-grid {
+      max-width: 1200px; margin: 24px auto 0; padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 16px;
+    }
+
+    /* Panel base */
+    .live-panel {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(184,188,239,0.1);
+      border-radius: 16px; padding: 20px;
+      transition: border-color 0.3s;
+    }
+    .live-panel.has-data { border-color: rgba(91,91,214,0.25); }
+    .panel-top {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .panel-top h3 { font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.5); letter-spacing: 0.06em; text-transform: uppercase; margin: 0; }
+    .live-badge-pill {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+      padding: 3px 9px; border-radius: 20px; text-transform: uppercase;
+      background: rgba(74,222,128,0.1); color: #4ade80;
+      border: 1px solid rgba(74,222,128,0.25);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .live-badge-pill .blink { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; animation: pulse-dot 1.2s infinite; }
+    .live-badge-pill.off { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.08); }
+    .live-badge-pill.off .blink { background: rgba(255,255,255,0.2); animation: none; }
+
+    /* ECG panel — spans full width */
+    .panel-ecg { grid-column: 1 / -1; }
+    .ecg-canvas-wrap { position: relative; }
+    #ecg-canvas {
+      width: 100%; height: 150px; display: block;
+      background: transparent; border-radius: 8px;
+    }
+    .ecg-stats { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+    .ecg-stat {
+      background: rgba(91,91,214,0.08); border: 1px solid rgba(91,91,214,0.15);
+      border-radius: 10px; padding: 10px 16px; flex: 1; min-width: 80px; text-align: center;
+    }
+    .ecg-stat .val { font-size: 1.5rem; font-weight: 800; color: var(--color-primary); font-family: 'DM Mono', monospace; }
+    .ecg-stat .lbl { font-size: 0.68rem; color: rgba(255,255,255,0.3); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* Vital metric panels */
+    .metric-big {
+      font-size: 3rem; font-weight: 800; font-family: 'DM Mono', monospace;
+      line-height: 1; margin: 8px 0 4px;
+    }
+    .metric-unit { font-size: 1rem; font-weight: 400; color: rgba(255,255,255,0.35); margin-left: 4px; }
+    .metric-label { font-size: 0.75rem; color: rgba(255,255,255,0.3); }
+    .metric-bar-wrap { margin-top: 14px; }
+    .metric-bar-track { background: rgba(255,255,255,0.06); border-radius: 6px; height: 6px; overflow: hidden; }
+    .metric-bar-fill { height: 100%; border-radius: 6px; transition: width 0.4s ease; width: 0%; }
+    .bar-temp { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+    .bar-hum  { background: linear-gradient(90deg, #38bdf8, #818cf8); }
+    .bar-hr   { background: linear-gradient(90deg, #f472b6, #ef4444); }
+    .metric-range { display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.65rem; color: rgba(255,255,255,0.2); font-family: 'DM Mono', monospace; }
+
+    /* Accel panel */
+    .accel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .accel-axis { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 12px; text-align: center; }
+    .axis-label { font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; margin-bottom: 4px; }
+    .axis-val { font-size: 1.4rem; font-weight: 700; font-family: 'DM Mono', monospace; color: var(--color-secondary); }
+    .svm-big { font-size: 2rem; font-weight: 800; font-family: 'DM Mono', monospace; text-align: center; padding: 12px 0; color: #4ade80; }
+    .svm-label { text-align: center; font-size: 0.7rem; color: rgba(255,255,255,0.3); margin-top: -8px; }
+    .fall-alert {
+      margin-top: 12px; padding: 10px 14px; border-radius: 10px;
+      font-size: 0.8rem; font-weight: 600; text-align: center;
+      background: rgba(74,222,128,0.08); color: #4ade80;
+      border: 1px solid rgba(74,222,128,0.2);
+      transition: all 0.3s;
+    }
+    .fall-alert.warning {
+      background: rgba(239,68,68,0.12); color: #f87171;
+      border-color: rgba(239,68,68,0.3);
+      animation: flash-warn 0.5s ease 3;
+    }
+    @keyframes flash-warn { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* Error / no data state */
+    .no-data {
+      color: rgba(255,255,255,0.15); font-size: 0.85rem;
+      text-align: center; padding: 24px 0;
+      font-family: 'DM Mono', monospace;
+    }
+    .no-data span { display: block; font-size: 2rem; margin-bottom: 8px; }
+
+    /* Data log */
+    .log-panel { grid-column: 1 / -1; }
+    .log-inner {
+      height: 120px; overflow-y: auto; background: rgba(0,0,0,0.25);
+      border-radius: 10px; padding: 10px 14px;
+      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      color: rgba(255,255,255,0.3); line-height: 1.7;
+    }
+    .log-inner::-webkit-scrollbar { width: 4px; }
+    .log-inner::-webkit-scrollbar-thumb { background: rgba(91,91,214,0.3); border-radius: 4px; }
+    .log-entry { color: rgba(91,91,214,0.7); }
+    .log-time  { color: rgba(255,255,255,0.2); }
+    .log-data  { color: rgba(255,255,255,0.5); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .live-grid { grid-template-columns: 1fr 1fr; }
+      .panel-ecg { grid-column: 1 / -1; }
+      .log-panel { grid-column: 1 / -1; }
+    }
+    @media (max-width: 520px) {
+      .live-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar dark-default" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-vital">Vital</span><span class="logo-sync">Sync</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="features.html">Features</a>
+      <a href="health-monitor.html">Health Monitor</a>
+      <a href="analysis.html">Analysis</a><a href="live-sensor.html">&#9889; Live</a><a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <a href="contact.html" class="btn btn-nav-cta">Get Early Access</a>
+    <button class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="nav-overlay" role="dialog" aria-modal="true">
+  <nav class="nav-overlay-links">
+    <a href="index.html">Home</a><a href="features.html">Features</a>
+    <a href="health-monitor.html">Health Monitor</a><a href="analysis.html">Analysis</a><a href="live-sensor.html">&#9889; Live</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+  </nav>
+  <a href="contact.html" class="btn-overlay-cta">Get Early Access</a>
+</div>
+
+<main class="live-page">
+
+  <!-- Connect Banner -->
+  <div class="connect-banner">
+    <div class="connect-inner">
+      <label for="esp-ip-input">🔌 ESP8266 IP:</label>
+      <input id="esp-ip-input" type="text" placeholder="192.168.1.45" value="" autocomplete="off" spellcheck="false">
+      <button class="btn-connect" id="btn-connect" onclick="toggleConnect()">Connect</button>
+      <div class="status-pill disconnected" id="status-pill">
+        <span class="dot"></span>
+        <span id="status-text">Disconnected</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Header -->
+  <div class="live-header">
+    <div>
+      <h1>🔴 Live Sensor Analysis</h1>
+      <p>Real-time data from your ESP8266 NodeMCU device — ECG, Temperature, Humidity, Motion</p>
+      <div class="esp-ip" id="esp-ip-display"></div>
+    </div>
+    <div class="sample-rate">
+      Samples received: <span id="sample-count">0</span><br>
+      <span id="fps-display" style="color:rgba(255,255,255,0.2);font-size:0.7rem">—</span>
+    </div>
+  </div>
+
+  <!-- Dashboard Grid -->
+  <div class="live-grid">
+
+    <!-- ECG Panel -->
+    <div class="live-panel panel-ecg" id="ecg-panel">
+      <div class="panel-top">
+        <h3>⚡ ECG Waveform — AD8232</h3>
+        <div class="live-badge-pill off" id="ecg-badge"><span class="blink"></span> LIVE</div>
+      </div>
+      <canvas id="ecg-canvas" height="150" aria-label="Live ECG waveform from ESP8266"></canvas>
+      <div class="ecg-stats">
+        <div class="ecg-stat">
+          <div class="val" id="ecg-hr">—</div>
+          <div class="lbl">Heart Rate bpm</div>
+        </div>
+        <div class="ecg-stat">
+          <div class="val" id="ecg-raw">—</div>
+          <div class="lbl">ECG Raw ADC</div>
+        </div>
+        <div class="ecg-stat">
+          <div class="val" id="ecg-peak">—</div>
+          <div class="lbl">Peak Value</div>
+        </div>
+        <div class="ecg-stat">
+          <div class="val" id="ecg-min">—</div>
+          <div class="lbl">Min Value</div>
+        </div>
+        <div class="ecg-stat">
+          <div class="val" id="ecg-quality">—</div>
+          <div class="lbl">Signal Quality</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Temperature Panel -->
+    <div class="live-panel" id="temp-panel">
+      <div class="panel-top">
+        <h3>🌡️ Temperature</h3>
+        <div class="live-badge-pill off" id="temp-badge"><span class="blink"></span> DHT11</div>
+      </div>
+      <div class="metric-big" id="temp-val" style="color: #f59e0b">—<span class="metric-unit">°C</span></div>
+      <div class="metric-label" id="temp-feel">Waiting for data…</div>
+      <div class="metric-bar-wrap">
+        <div class="metric-bar-track"><div class="metric-bar-fill bar-temp" id="temp-bar" style="width:0%"></div></div>
+        <div class="metric-range"><span>20°C</span><span>45°C</span></div>
+      </div>
+    </div>
+
+    <!-- Humidity Panel -->
+    <div class="live-panel" id="hum-panel">
+      <div class="panel-top">
+        <h3>💧 Humidity</h3>
+        <div class="live-badge-pill off" id="hum-badge"><span class="blink"></span> DHT11</div>
+      </div>
+      <div class="metric-big" id="hum-val" style="color: #38bdf8">—<span class="metric-unit">%</span></div>
+      <div class="metric-label" id="hum-feel">Waiting for data…</div>
+      <div class="metric-bar-wrap">
+        <div class="metric-bar-track"><div class="metric-bar-fill bar-hum" id="hum-bar" style="width:0%"></div></div>
+        <div class="metric-range"><span>0%</span><span>100%</span></div>
+      </div>
+    </div>
+
+    <!-- Heart Rate Panel -->
+    <div class="live-panel" id="hr-panel">
+      <div class="panel-top">
+        <h3>❤️ Heart Rate</h3>
+        <div class="live-badge-pill off" id="hr-badge"><span class="blink"></span> EST</div>
+      </div>
+      <div class="metric-big" id="hr-val" style="color: #f472b6">—<span class="metric-unit">bpm</span></div>
+      <div class="metric-label" id="hr-zone">Waiting for data…</div>
+      <div class="metric-bar-wrap">
+        <div class="metric-bar-track"><div class="metric-bar-fill bar-hr" id="hr-bar" style="width:0%"></div></div>
+        <div class="metric-range"><span>40 bpm</span><span>200 bpm</span></div>
+      </div>
+    </div>
+
+    <!-- Accelerometer Panel -->
+    <div class="live-panel" id="accel-panel" style="grid-column: span 2;">
+      <div class="panel-top">
+        <h3>📡 Accelerometer — ADXL345</h3>
+        <div class="live-badge-pill off" id="accel-badge"><span class="blink"></span> 3-AXIS</div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap;">
+        <div style="flex:1; min-width:180px;">
+          <div class="accel-grid">
+            <div class="accel-axis">
+              <div class="axis-label">X-AXIS</div>
+              <div class="axis-val" id="ax-val">—</div>
+            </div>
+            <div class="accel-axis">
+              <div class="axis-label">Y-AXIS</div>
+              <div class="axis-val" id="ay-val">—</div>
+            </div>
+            <div class="accel-axis">
+              <div class="axis-label">Z-AXIS</div>
+              <div class="axis-val" id="az-val">—</div>
+            </div>
+            <div class="accel-axis" style="background:rgba(74,222,128,0.06); border:1px solid rgba(74,222,128,0.1)">
+              <div class="axis-label">SVM (g)</div>
+              <div class="axis-val" id="svm-val" style="color:#4ade80">—</div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:0 0 140px; text-align:center;">
+          <div style="font-size:0.7rem; color:rgba(255,255,255,0.3); margin-bottom:8px; letter-spacing: 0.06em; text-transform: uppercase;">Fall Detection</div>
+          <div class="fall-alert" id="fall-alert">✅ No fall detected</div>
+          <div style="font-size:0.65rem; color:rgba(255,255,255,0.2); margin-top:8px">SVM threshold: 2.5g</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Log -->
+    <div class="live-panel log-panel">
+      <div class="panel-top" style="margin-bottom:8px;">
+        <h3>📋 Data Log</h3>
+        <button onclick="clearLog()" style="background:rgba(255,255,255,0.05);border:none;color:rgba(255,255,255,0.3);border-radius:6px;padding:4px 10px;font-size:0.7rem;cursor:pointer;">Clear</button>
+      </div>
+      <div class="log-inner" id="data-log">
+        <div style="color:rgba(255,255,255,0.15)">Waiting for connection…</div>
+      </div>
+    </div>
+
+  </div><!-- /live-grid -->
+</main>
+
+<script src="js/nav.js"></script>
+<script src="js/chatbot.js"></script>
+<script>
+/* ============================================================
+   VitalSync Live Sensor Page
+   Fetches from ESP8266 /data endpoint every 250ms
+   No backend required — direct WiFi connection
+   ============================================================ */
+
+  const POLL_MS       = 300;  // Fetch every 300ms
+  const ECG_HISTORY   = 300;  // ECG waveform points
+  const FALL_THRESH   = 2.5;  // g — SVM fall threshold
+
+  let pollingInterval = null;
+  let isConnected     = false;
+  let espIP           = '';
+  let sampleCount     = 0;
+  let lastTs          = 0;
+  let ecgHistory      = new Array(ECG_HISTORY).fill(512);
+  let peakHistory     = [];
+
+  // Canvas setup
+  const canvas = document.getElementById('ecg-canvas');
+  const ctx    = canvas.getContext('2d');
+  function resizeCanvas() {
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = 150;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  /* ── Connect / Disconnect ──────────────────────────────────── */
+  function toggleConnect() {
+    if (isConnected) disconnect();
+    else connect();
+  }
+
+  function connect() {
+    const input = document.getElementById('esp-ip-input').value.trim();
+    if (!input) { document.getElementById('esp-ip-input').focus(); return; }
+
+    espIP = input.startsWith('http') ? input : `http://${input}`;
+    setStatus('connecting');
+    document.getElementById('btn-connect').disabled = true;
+    document.getElementById('esp-ip-display').textContent = `Connecting to ${espIP}/data …`;
+
+    // First probe
+    fetchData().then(ok => {
+      if (ok) {
+        setStatus('connected');
+        document.getElementById('btn-connect').textContent = 'Disconnect';
+        document.getElementById('btn-connect').disabled   = false;
+        document.getElementById('esp-ip-display').textContent = `📡 Connected → ${espIP}/data`;
+        isConnected = true;
+        pollingInterval = setInterval(fetchData, POLL_MS);
+      } else {
+        setStatus('disconnected');
+        document.getElementById('btn-connect').disabled = false;
+        document.getElementById('esp-ip-display').textContent = `⚠️ Could not reach ${espIP} — check IP and WiFi`;
+      }
+    });
+  }
+
+  function disconnect() {
+    clearInterval(pollingInterval);
+    pollingInterval = null;
+    isConnected     = false;
+    setStatus('disconnected');
+    document.getElementById('btn-connect').textContent = 'Connect';
+    document.getElementById('esp-ip-display').textContent = '';
+    // Turn off badges
+    ['ecg-badge','temp-badge','hum-badge','hr-badge','accel-badge'].forEach(id => {
+      document.getElementById(id).classList.add('off');
+    });
+  }
+
+  function setStatus(state) {
+    const pill = document.getElementById('status-pill');
+    const text = document.getElementById('status-text');
+    pill.className = 'status-pill ' + state;
+    text.textContent = { disconnected: 'Disconnected', connecting: 'Connecting…', connected: 'Live' }[state];
+  }
+
+  /* ── Fetch from ESP8266 ────────────────────────────────────── */
+  async function fetchData() {
+    try {
+      const res  = await fetch(`${espIP}/data`, { signal: AbortSignal.timeout(2000) });
+      if (!res.ok) return false;
+      const data = await res.json();
+
+      processData(data);
+      return true;
+    } catch (err) {
+      if (isConnected) {
+        setStatus('connecting');  // Lost connection
+      }
+      return false;
+    }
+  }
+
+  /* ── Process & render ──────────────────────────────────────── */
+  function processData(d) {
+    sampleCount++;
+    document.getElementById('sample-count').textContent = sampleCount;
+
+    const fps = lastTs ? Math.round(1000 / (Date.now() - lastTs)) : '—';
+    document.getElementById('fps-display').textContent = `~${fps} samples/sec`;
+    lastTs = Date.now();
+
+    // Activate badges
+    ['ecg-badge','temp-badge','hum-badge','hr-badge','accel-badge'].forEach(id => {
+      document.getElementById(id).classList.remove('off');
+    });
+
+    // ── ECG ────────────────────────────────────────────────────
+    const ecg = parseInt(d.ecg) || 512;
+    ecgHistory.push(ecg);
+    if (ecgHistory.length > ECG_HISTORY) ecgHistory.shift();
+
+    drawECG();
+
+    // Peak tracking
+    peakHistory.push(ecg);
+    if (peakHistory.length > 60) peakHistory.shift();
+    const peak = Math.max(...peakHistory);
+    const minV = Math.min(...peakHistory);
+    const range = peak - minV;
+    const quality = range > 200 ? 'Good' : range > 80 ? 'Fair' : 'Weak';
+
+    document.getElementById('ecg-raw').textContent = ecg;
+    document.getElementById('ecg-peak').textContent = peak;
+    document.getElementById('ecg-min').textContent  = minV;
+    document.getElementById('ecg-quality').textContent = quality;
+    document.getElementById('ecg-hr').textContent   = d.hr || '—';
+
+    // ── Temperature ────────────────────────────────────────────
+    const temp = parseFloat(d.temp);
+    if (!isNaN(temp)) {
+      document.getElementById('temp-val').innerHTML = `${temp.toFixed(1)}<span class="metric-unit">°C</span>`;
+      document.getElementById('temp-bar').style.width = `${Math.min(100, Math.max(0, (temp - 20) / 25 * 100))}%`;
+      document.getElementById('temp-feel').textContent =
+        temp > 38 ? '🔴 Very Hot — heat stress risk' :
+        temp > 35 ? '🟠 Hot'     :
+        temp > 30 ? '🟡 Warm'    :
+        temp > 22 ? '🟢 Comfortable' : '🔵 Cool';
+    }
+
+    // ── Humidity ───────────────────────────────────────────────
+    const hum = parseFloat(d.hum);
+    if (!isNaN(hum)) {
+      document.getElementById('hum-val').innerHTML = `${Math.round(hum)}<span class="metric-unit">%</span>`;
+      document.getElementById('hum-bar').style.width = `${hum}%`;
+      document.getElementById('hum-feel').textContent =
+        hum > 80 ? '💦 Very Humid — high sweat risk' :
+        hum > 60 ? '💧 Humid'        :
+        hum > 40 ? '✅ Comfortable'  : '🌵 Dry';
+    }
+
+    // ── Heart Rate ─────────────────────────────────────────────
+    const hr = parseInt(d.hr);
+    if (hr > 0) {
+      document.getElementById('hr-val').innerHTML  = `${hr}<span class="metric-unit">bpm</span>`;
+      document.getElementById('hr-bar').style.width= `${Math.min(100, (hr - 40) / 160 * 100)}%`;
+      document.getElementById('hr-zone').textContent =
+        hr > 170 ? '🔴 Max — Danger zone'      :
+        hr > 150 ? '🟠 High — Hard effort'     :
+        hr > 130 ? '🟡 Cardio zone'            :
+        hr > 100 ? '🟢 Aerobic zone'           :
+        hr > 60  ? '✅ Resting — Normal'       : '🔵 Very low';
+    }
+
+    // ── Accelerometer ──────────────────────────────────────────
+    document.getElementById('ax-val').textContent = d.ax ?? '—';
+    document.getElementById('ay-val').textContent = d.ay ?? '—';
+    document.getElementById('az-val').textContent = d.az ?? '—';
+    const svm = parseFloat(d.svm);
+    document.getElementById('svm-val').textContent = isNaN(svm) ? '—' : svm.toFixed(2) + 'g';
+
+    // Fall detection
+    const fallEl = document.getElementById('fall-alert');
+    if (!isNaN(svm) && svm > FALL_THRESH) {
+      fallEl.textContent = '⚠️ FALL DETECTED! SVM > 2.5g';
+      fallEl.classList.add('warning');
+      setTimeout(() => { fallEl.classList.remove('warning'); fallEl.textContent = '✅ No fall detected'; }, 3000);
+    }
+
+    // ── Data Log ───────────────────────────────────────────────
+    addLog(d);
+  }
+
+  /* ── ECG Canvas Drawing ────────────────────────────────────── */
+  function drawECG() {
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(91,91,214,0.08)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+    for (let y = 0; y < H; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+    // ECG waveform
+    const minV = Math.min(...ecgHistory);
+    const maxV = Math.max(...ecgHistory);
+    const range = maxV - minV || 1;
+
+    const grad = ctx.createLinearGradient(0, 0, W, 0);
+    grad.addColorStop(0,   'rgba(91,91,214,0)');
+    grad.addColorStop(0.1, 'rgba(91,91,214,0.9)');
+    grad.addColorStop(0.9, 'rgba(138,143,232,1)');
+    grad.addColorStop(1,   'rgba(91,91,214,1)');
+
+    ctx.beginPath();
+    ctx.strokeStyle = grad;
+    ctx.lineWidth   = 2;
+    ctx.lineJoin    = 'round';
+    ctx.lineCap     = 'round';
+
+    ecgHistory.forEach((val, i) => {
+      const x = (i / (ECG_HISTORY - 1)) * W;
+      const y = H - ((val - minV) / range) * (H * 0.85) - H * 0.075;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Glow effect on last point
+    const lastX = W;
+    const lastY = H - ((ecgHistory[ecgHistory.length-1] - minV) / range) * (H * 0.85) - H * 0.075;
+    const glow = ctx.createRadialGradient(lastX, lastY, 0, lastX, lastY, 14);
+    glow.addColorStop(0, 'rgba(138,143,232,0.6)');
+    glow.addColorStop(1, 'rgba(138,143,232,0)');
+    ctx.beginPath();
+    ctx.fillStyle = glow;
+    ctx.arc(lastX, lastY, 14, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.fillStyle = '#8A8FE8';
+    ctx.arc(lastX, lastY, 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  /* ── Data Log ──────────────────────────────────────────────── */
+  function addLog(d) {
+    const log  = document.getElementById('data-log');
+    const time = new Date().toLocaleTimeString();
+    const line = document.createElement('div');
+    line.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-data">ECG:${d.ecg} T:${d.temp}°C H:${d.hum}% HR:${d.hr}bpm AX:${d.ax} AY:${d.ay} AZ:${d.az} SVM:${d.svm}g</span>`;
+    log.appendChild(line);
+    if (log.children.length > 80) log.removeChild(log.firstChild);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function clearLog() {
+    document.getElementById('data-log').innerHTML = '<div style="color:rgba(255,255,255,0.15)">Log cleared…</div>';
+  }
+
+  // Draw empty ECG on load
+  drawECG();
+
+  // Try to restore last IP from localStorage
+  const savedIP = localStorage.getItem('esp_ip');
+  if (savedIP) document.getElementById('esp-ip-input').value = savedIP;
+  document.getElementById('esp-ip-input').addEventListener('input', function() {
+    localStorage.setItem('esp_ip', this.value.trim());
+  });
+</script>
+</body>
+</html>

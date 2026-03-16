@@ -1,0 +1,302 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VitalSync Analysis | Health Trends & Reports</title>
+  <meta name="description" content="Explore your VitalSync health data — HR trends, HRV scores, activity breakdown, AI-generated recovery insights and sortable session history.">
+  <meta property="og:title" content="VitalSync Analysis | Health Trends & Reports">
+  <meta property="og:description" content="Charts, session history, and AI health insights from your VitalSync data.">
+  <link rel="canonical" href="analysis.html">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages/analysis.css">
+  <link rel="stylesheet" href="css/chatbot.css">
+</head>
+<body>
+
+<nav class="navbar dark-default" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-vital">Vital</span><span class="logo-sync">Sync</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a><a href="features.html">Features</a>
+      <a href="health-monitor.html">Health Monitor</a><a href="analysis.html">Analysis</a><a href="live-sensor.html">&#9889; Live</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+    </div>
+    <a href="contact.html" class="btn btn-nav-cta">Get Early Access</a>
+    <button class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="nav-overlay" role="dialog" aria-modal="true">
+  <nav class="nav-overlay-links">
+    <a href="index.html">Home</a><a href="features.html">Features</a>
+    <a href="health-monitor.html">Health Monitor</a><a href="analysis.html">Analysis</a><a href="live-sensor.html">&#9889; Live</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+  </nav>
+  <a href="contact.html" class="btn-overlay-cta">Get Early Access</a>
+</div>
+
+<main>
+
+<section class="analysis-hero">
+  <div class="container">
+    <span class="section-label" style="color:var(--color-secondary)">Data Analysis</span>
+    <h1>Health Trends &amp; Reports</h1>
+    <p>Visualize your heart rate patterns, HRV trends, activity breakdown and AI-generated recovery insights across any time window.</p>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+
+    <!-- Range selector + heading -->
+    <div class="analysis-controls animate-on-scroll">
+      <h2 style="font-size:1.25rem">Your Health Overview</h2>
+      <div class="range-pills">
+        <button class="range-pill active" aria-pressed="true">24h</button>
+        <button class="range-pill" aria-pressed="false">7d</button>
+        <button class="range-pill" aria-pressed="false">30d</button>
+        <button class="range-pill" aria-pressed="false">3m</button>
+      </div>
+    </div>
+
+    <!-- Summary cards -->
+    <div class="summary-cards animate-on-scroll" data-delay="60">
+      <div class="summary-card">
+        <div class="sc-label">Average Heart Rate</div>
+        <div class="sc-value">74 <span style="font-size:1rem;color:rgba(91,91,214,0.5)">bpm</span></div>
+        <div class="sc-trend trend-down">▼ 2% vs last period</div>
+      </div>
+      <div class="summary-card">
+        <div class="sc-label">Average SpO₂</div>
+        <div class="sc-value">97.8 <span style="font-size:1rem;color:rgba(91,91,214,0.5)">%</span></div>
+        <div class="sc-trend trend-up">▲ 0.4% vs last period</div>
+      </div>
+      <div class="summary-card">
+        <div class="sc-label">Recovery Score</div>
+        <div class="sc-value">78 <span style="font-size:1rem;color:rgba(91,91,214,0.5)">/100</span></div>
+        <div class="sc-trend trend-up">▲ 5 pts vs last period</div>
+      </div>
+    </div>
+
+    <!-- HR Trend Chart -->
+    <div class="chart-card animate-on-scroll">
+      <h3>Heart Rate &amp; HRV Trend</h3>
+      <div class="chart-container" style="height:280px">
+        <canvas id="hr-chart" aria-label="Heart rate and HRV trend chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Two charts -->
+    <div class="chart-row animate-on-scroll">
+      <div class="chart-card" style="margin-bottom:0">
+        <h3>Weekly Activity Breakdown</h3>
+        <div class="chart-container" style="height:240px">
+          <canvas id="activity-chart" aria-label="Weekly activity by intensity zone"></canvas>
+        </div>
+      </div>
+      <div class="chart-card" style="margin-bottom:0">
+        <h3>Time Distribution</h3>
+        <div class="chart-container" style="height:240px">
+          <canvas id="donut-chart" aria-label="Time distribution donut chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Insights -->
+    <div class="ai-insights-panel animate-on-scroll" style="margin-top:24px">
+      <h2>AI Health Summary — Last 7 Days</h2>
+      <div class="ai-insights-grid">
+        <div class="ai-insight-card">
+          <div class="ai-insight-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+          </div>
+          <p>HRV trending up 12% this week — recovery improving. Parasympathetic activity is optimal for training load.</p>
+          <div class="confidence-label">Confidence</div>
+          <div class="confidence-bar"><div class="confidence-fill" style="width:91%"></div></div>
+        </div>
+
+        <div class="ai-insight-card">
+          <div class="ai-insight-icon">
+            <svg viewBox="0 0 24 24"><path d="M13 2.003A10.015 10.015 0 0 0 12 2C6.477 2 2 6.477 2 12a10 10 0 0 0 10 10c5.523 0 10-4.477 10-10 0-.344-.018-.684-.052-1.02L13 2.003zm-.003 3.994L19.5 12H13V6l-.003-.003z"/></svg>
+          </div>
+          <p>3 sessions showed elevated HR variance — monitor hydration levels. Peaks correlate with afternoon workouts.</p>
+          <div class="confidence-label">Confidence</div>
+          <div class="confidence-bar"><div class="confidence-fill" style="width:76%"></div></div>
+        </div>
+
+        <div class="ai-insight-card">
+          <div class="ai-insight-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm1 17.93V18a1 1 0 0 0-2 0v1.93A8 8 0 0 1 4.07 13H6a1 1 0 0 0 0-2H4.07A8 8 0 0 1 11 4.07V6a1 1 0 0 0 2 0V4.07A8 8 0 0 1 19.93 11H18a1 1 0 0 0 0 2h1.93A8 8 0 0 1 13 19.93z"/></svg>
+          </div>
+          <p>Environmental heat stress detected on 2 occasions. Humidity >68% coincided with HR spikes above 105 bpm.</p>
+          <div class="confidence-label">Confidence</div>
+          <div class="confidence-bar"><div class="confidence-fill" style="width:83%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session History Table -->
+    <div class="animate-on-scroll" style="margin-top:24px;margin-bottom:40px">
+      <h2 style="margin-bottom:20px;font-size:1.25rem">Session History</h2>
+      <div class="vs-table-wrap">
+        <table class="vs-table" id="sessions-table" aria-label="Session history">
+          <thead>
+            <tr>
+              <th data-col="date">Date</th>
+              <th data-col="duration">Duration</th>
+              <th data-col="avghr">Avg HR</th>
+              <th data-col="maxhr">Max HR</th>
+              <th data-col="hrv">HRV</th>
+              <th data-col="recovery">Recovery</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="sessions-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <span class="pagination-info" id="page-info">Page 1 of 2</span>
+        <button class="pagination-btn" id="prev-page" disabled>← Prev</button>
+        <button class="pagination-btn" id="next-page">Next →</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-banner">
+  <div class="container">
+    <h2>Ready for your real data?</h2>
+    <p>Connect your VitalSync device to populate these charts with live readings.</p>
+    <a href="health-monitor.html" class="btn btn-white-outline btn-lg">Open Monitor</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo"><span class="logo-vital">Vital</span><span class="logo-sync">Sync</span></a>
+        <p>IoT-powered wearable health monitoring for athletes and performance teams.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="health-monitor.html">Health Monitor</a></li>
+          <li><a href="analysis.html">Analysis</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Social</h4>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/></svg>Twitter</a>
+          <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>GitHub</a>
+        </div>
+      </div>
+      <div class="footer-newsletter footer-col">
+        <h4>Stay Updated</h4>
+        <form onsubmit="event.preventDefault();">
+          <input type="email" placeholder="your@email.com" aria-label="Email" required>
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 VitalSync Team. All rights reserved.</p>
+      <div class="footer-bottom-links"><a href="#">Privacy</a><a href="#">Terms</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/nav.js"></script>
+<script src="js/animations.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<script src="js/charts.js" defer></script>
+<script src="js/api.js"></script>
+<script src="js/chatbot.js"></script>
+<script>
+  /* ── Range pills ── */
+  document.querySelectorAll('.range-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.range-pill').forEach(p => { p.classList.remove('active'); p.setAttribute('aria-pressed','false'); });
+      pill.classList.add('active');
+      pill.setAttribute('aria-pressed','true');
+    });
+  });
+
+  /* ── Session Table Data ── */
+  const statuses = [
+    { label: 'Optimal',    cls: 'status-optimal' },
+    { label: 'Fatigued',   cls: 'status-fatigued' },
+    { label: 'High Stress',cls: 'status-stress' },
+  ];
+
+  const sessions = Array.from({ length: 20 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const avgHr  = Math.round(65 + Math.random() * 25);
+    const maxHr  = avgHr + Math.round(10 + Math.random() * 15);
+    const hrv    = Math.round(42 + Math.random() * 24);
+    const rec    = Math.round(55 + Math.random() * 40);
+    const status = statuses[Math.random() < 0.55 ? 0 : (Math.random() < 0.6 ? 1 : 2)];
+    const mins   = Math.round(25 + Math.random() * 60);
+    return { date: d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }),
+             duration: `${Math.floor(mins/60)}h ${mins%60}m`, avgHr, maxHr, hrv, rec, status };
+  });
+
+  let currentPage = 1;
+  const perPage = 10;
+
+  function renderTable(page) {
+    const tbody = document.getElementById('sessions-tbody');
+    const start = (page - 1) * perPage;
+    const slice = sessions.slice(start, start + perPage);
+    tbody.innerHTML = slice.map(s => `
+      <tr>
+        <td>${s.date}</td>
+        <td>${s.duration}</td>
+        <td>${s.avgHr} bpm</td>
+        <td>${s.maxHr} bpm</td>
+        <td>${s.hrv} ms</td>
+        <td>${s.rec}/100</td>
+        <td><span class="status-badge ${s.status.cls}">${s.status.label}</span></td>
+      </tr>
+    `).join('');
+    const total = Math.ceil(sessions.length / perPage);
+    document.getElementById('page-info').textContent = `Page ${page} of ${total}`;
+    document.getElementById('prev-page').disabled = page === 1;
+    document.getElementById('next-page').disabled = page === total;
+  }
+
+  document.getElementById('prev-page').addEventListener('click', () => { currentPage--; renderTable(currentPage); });
+  document.getElementById('next-page').addEventListener('click', () => { currentPage++; renderTable(currentPage); });
+
+  /* Sortable columns */
+  let sortAsc = true, lastCol = null;
+  document.querySelectorAll('.vs-table thead th[data-col]').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (lastCol === col) sortAsc = !sortAsc;
+      else { sortAsc = true; lastCol = col; }
+      sessions.sort((a, b) => {
+        const v = col === 'date' ? new Date(a.date) - new Date(b.date)
+                : col === 'duration' ? a.duration.localeCompare(b.duration)
+                : (a[col] || 0) - (b[col] || 0);
+        return sortAsc ? v : -v;
+      });
+      document.querySelectorAll('.vs-table thead th').forEach(h => h.classList.remove('sorted-asc','sorted-desc'));
+      th.classList.add(sortAsc ? 'sorted-asc' : 'sorted-desc');
+      renderTable(currentPage);
+    });
+  });
+
+  renderTable(1);
+</script>
+</body>
+</html>

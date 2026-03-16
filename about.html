@@ -1,0 +1,283 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VitalSync | Our Story</title>
+  <meta name="description" content="How VitalSync came to be — the hardware stack, the tech, and the mission to democratize real-time cardiac monitoring for every athlete.">
+  <meta property="og:title" content="VitalSync | Our Story">
+  <meta property="og:description" content="From a $15 IoT device to a clinical-grade monitoring platform.">
+  <link rel="canonical" href="about.html">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages/about.css">
+  <link rel="stylesheet" href="css/chatbot.css">
+</head>
+<body>
+
+<nav class="navbar dark-default" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-vital">Vital</span><span class="logo-sync">Sync</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a><a href="features.html">Features</a>
+      <a href="health-monitor.html">Health Monitor</a><a href="analysis.html">Analysis</a><a href="live-sensor.html">&#9889; Live</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+    </div>
+    <a href="contact.html" class="btn btn-nav-cta">Get Early Access</a>
+    <button class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="nav-overlay" role="dialog" aria-modal="true">
+  <nav class="nav-overlay-links">
+    <a href="index.html">Home</a><a href="features.html">Features</a>
+    <a href="health-monitor.html">Health Monitor</a><a href="analysis.html">Analysis</a><a href="live-sensor.html">&#9889; Live</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+  </nav>
+  <a href="contact.html" class="btn-overlay-cta">Get Early Access</a>
+</div>
+
+<main>
+
+<section class="about-hero">
+  <div class="container">
+    <span class="section-label" style="color:var(--color-secondary)">Our Story</span>
+    <h1>Built from frustration. Driven by data.</h1>
+    <p>A $15 device. Three sensors. One mission: make real-time cardiac monitoring accessible to every athlete, not just the ones with $400 monitors.</p>
+  </div>
+</section>
+
+<!-- Problem -->
+<section class="problem-section">
+  <div class="container">
+    <div class="problem-grid">
+      <div class="animate-on-scroll">
+        <span class="section-label">The Problem</span>
+        <div class="problem-stat">1 in 5</div>
+        <div class="problem-stat-label">athletes experience undetected cardiac irregularities.</div>
+        <div class="badge badge-primary" style="margin-bottom:16px">Cardiac Monitoring Gap</div>
+      </div>
+      <div class="problem-text animate-on-scroll" data-delay="80">
+        <p>Most wearables report heart rate as a smoothed average — not the raw electrical signal. That difference matters enormously when you're trying to detect arrhythmias, HRV dips, or prolonged QT intervals during a sprint block.</p>
+        <p>Consumer smartwatches cost $300–$500 and offer approximate readings. Clinical Holter monitors cost upwards of $1,500 and require a physician to interpret results days later. Neither serves the everyday athlete.</p>
+        <p>VitalSync was born from the question: what if you combined a $3 ECG module, a $2 accelerometer, a $1 temperature sensor, and an ESP8266 WiFi chip — and put a real machine-learning pipeline on top? The answer is a device that costs under $15 to build and delivers real-time, physiologically accurate data straight to a web dashboard.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Hardware -->
+<section class="hardware-section">
+  <div class="container">
+    <span class="section-label" style="color:var(--color-secondary)">The Hardware</span>
+    <h2>VitalSync v1.0 Hardware Stack</h2>
+    <p>Four components. One board. Infinite data.</p>
+
+    <div class="hw-diagram-wrap animate-on-scroll">
+      <svg viewBox="0 0 520 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;margin:0 auto" aria-label="Hardware diagram showing ESP8266 connected to sensors">
+
+        <!-- Center: ESP8266 -->
+        <rect x="190" y="130" width="140" height="80" rx="10" fill="rgba(91,91,214,0.2)" stroke="#5B5BD6" stroke-width="2"/>
+        <text x="260" y="164" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#8A8FE8">ESP8266</text>
+        <text x="260" y="182" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="rgba(255,255,255,0.35)">NodeMCU v3</text>
+        <text x="260" y="198" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="rgba(255,255,255,0.2)">80 MHz · 4MB Flash</text>
+
+        <!-- Wi-Fi cloud -->
+        <text x="260" y="22" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#5B5BD6">☁ Cloud / Dashboard</text>
+        <line x1="260" y1="28" x2="260" y2="130" stroke="#5B5BD6" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.65"/>
+        <text x="268" y="76" font-family="DM Mono,monospace" font-size="8" fill="rgba(91,91,214,0.5)">HTTP / WiFi</text>
+
+        <!-- AD8232 — top left -->
+        <rect x="20" y="40" width="110" height="52" rx="6" fill="rgba(184,188,239,0.06)" stroke="#B8BCEF" stroke-width="1.2"/>
+        <text x="75" y="62" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#B8BCEF">AD8232</text>
+        <text x="75" y="78" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="rgba(255,255,255,0.3)">ECG Module</text>
+        <line x1="130" y1="66" x2="190" y2="156" stroke="#B8BCEF" stroke-width="1" stroke-dasharray="5,4" opacity="0.45"/>
+        <text x="132" y="100" font-family="DM Mono,monospace" font-size="7" fill="rgba(184,188,239,0.4)">Analog A0</text>
+
+        <!-- ADXL345 — top right -->
+        <rect x="390" y="40" width="110" height="52" rx="6" fill="rgba(184,188,239,0.06)" stroke="#B8BCEF" stroke-width="1.2"/>
+        <text x="445" y="62" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#B8BCEF">ADXL345</text>
+        <text x="445" y="78" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="rgba(255,255,255,0.3)">Accelerometer</text>
+        <line x1="390" y1="66" x2="330" y2="156" stroke="#B8BCEF" stroke-width="1" stroke-dasharray="5,4" opacity="0.45"/>
+        <text x="350" y="100" font-family="DM Mono,monospace" font-size="7" fill="rgba(184,188,239,0.4)">I²C 0x53</text>
+
+        <!-- DHT11 — bottom left -->
+        <rect x="20" y="248" width="110" height="52" rx="6" fill="rgba(184,188,239,0.06)" stroke="#B8BCEF" stroke-width="1.2"/>
+        <text x="75" y="270" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#B8BCEF">DHT11</text>
+        <text x="75" y="286" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="rgba(255,255,255,0.3)">Temp / Humidity</text>
+        <line x1="130" y1="274" x2="190" y2="184" stroke="#B8BCEF" stroke-width="1" stroke-dasharray="5,4" opacity="0.45"/>
+        <text x="130" y="244" font-family="DM Mono,monospace" font-size="7" fill="rgba(184,188,239,0.4)">Digital D0</text>
+
+        <!-- SSD1306 — bottom right -->
+        <rect x="390" y="248" width="110" height="52" rx="6" fill="rgba(184,188,239,0.06)" stroke="#B8BCEF" stroke-width="1.2"/>
+        <text x="445" y="270" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#B8BCEF">SSD1306</text>
+        <text x="445" y="286" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="rgba(255,255,255,0.3)">OLED Display</text>
+        <line x1="390" y1="274" x2="330" y2="184" stroke="#B8BCEF" stroke-width="1" stroke-dasharray="5,4" opacity="0.45"/>
+        <text x="345" y="244" font-family="DM Mono,monospace" font-size="7" fill="rgba(184,188,239,0.4)">I²C 0x3C</text>
+
+        <!-- I2C bus label -->
+        <text x="260" y="330" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="rgba(255,255,255,0.18)">SDA=D2 (GPIO4) · SCL=D1 (GPIO5) · Total BOM ~$15</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- Tech Stack -->
+<section class="tech-section">
+  <div class="container">
+    <span class="section-label">Tech Stack</span>
+    <h2>Three layers. One system.</h2>
+    <div class="tech-cards animate-on-scroll">
+      <div class="tech-card">
+        <div class="icon-wrap" style="margin-bottom:16px"><svg viewBox="0 0 24 24"><path fill="#5B5BD6" d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm1 17.93V18a1 1 0 0 0-2 0v1.93A8 8 0 0 1 4.07 13H6a1 1 0 0 0 0-2H4.07A8 8 0 0 1 11 4.07V6a1 1 0 0 0 2 0V4.07A8 8 0 0 1 19.93 11H18a1 1 0 0 0 0 2h1.93A8 8 0 0 1 13 19.93z"/></svg></div>
+        <h3>IoT Layer</h3>
+        <p>The ESP8266 reads sensors, renders data on the OLED display, and POSTs structured JSON payloads to the backend every 500 ms over Wi-Fi.</p>
+        <div class="tech-tag-row">
+          <span class="tech-tag">ESP8266</span>
+          <span class="tech-tag">AD8232</span>
+          <span class="tech-tag">ADXL345</span>
+          <span class="tech-tag">DHT11</span>
+          <span class="tech-tag">HTTP/MQTT</span>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="icon-wrap" style="margin-bottom:16px"><svg viewBox="0 0 24 24"><path fill="#5B5BD6" d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/></svg></div>
+        <h3>Backend</h3>
+        <p>Node.js server with Socket.io pushes live data to connected dashboards in real time. TimescaleDB stores time-series sensor payloads efficiently.</p>
+        <div class="tech-tag-row">
+          <span class="tech-tag">Node.js</span>
+          <span class="tech-tag">Socket.io</span>
+          <span class="tech-tag">TimescaleDB</span>
+          <span class="tech-tag">REST API</span>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="icon-wrap" style="margin-bottom:16px"><svg viewBox="0 0 24 24"><path fill="#5B5BD6" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+        <h3>AI / ML</h3>
+        <p>1D-CNN (TensorFlow Lite) classifies ECG rhythms. SVM detects falls. XGBoost computes recovery scores. FastAPI serves inference endpoints.</p>
+        <div class="tech-tag-row">
+          <span class="tech-tag">TensorFlow</span>
+          <span class="tech-tag">FastAPI</span>
+          <span class="tech-tag">XGBoost</span>
+          <span class="tech-tag">1D-CNN</span>
+          <span class="tech-tag">SVM</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Roadmap -->
+<section class="roadmap-section">
+  <div class="container">
+    <span class="section-label">Roadmap</span>
+    <h2>Where we're going</h2>
+    <div class="roadmap-timeline animate-on-scroll">
+
+      <div class="roadmap-item">
+        <div class="roadmap-dot"></div>
+        <div class="roadmap-version">v1.0 — NOW</div>
+        <h4>Foundation</h4>
+        <ul>
+          <li>ECG via AD8232</li>
+          <li>Accelerometer ADXL345</li>
+          <li>DHT11 temp/humidity</li>
+          <li>Web dashboard (live)</li>
+          <li>Basic ML pipeline</li>
+        </ul>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-dot future"></div>
+        <div class="roadmap-version">v1.5 — Q3 2025</div>
+        <h4>Mobile & SpO₂</h4>
+        <ul>
+          <li>MAX30102 SpO₂ sensor</li>
+          <li>Progressive Web App (PWA)</li>
+          <li>Push notifications</li>
+          <li>Improved HRV models</li>
+        </ul>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-dot future"></div>
+        <div class="roadmap-version">v2.0 — Q1 2026</div>
+        <h4>Team Platform</h4>
+        <ul>
+          <li>Blood pressure estimation</li>
+          <li>Dedicated mobile apps</li>
+          <li>Multi-athlete team dashboard</li>
+          <li>Coach analytics portal</li>
+        </ul>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-dot future"></div>
+        <div class="roadmap-version">v3.0 — 2027</div>
+        <h4>Clinical Integration</h4>
+        <ul>
+          <li>ML health risk prediction</li>
+          <li>Clinical trial integration</li>
+          <li>HIPAA-compliant data layer</li>
+          <li>Physician API access</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-banner">
+  <div class="container">
+    <h2>Be part of the story</h2>
+    <p>Join 2,400+ early access athletes helping shape VitalSync's future.</p>
+    <a href="contact.html" class="btn btn-white-outline btn-lg">Get Early Access</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo"><span class="logo-vital">Vital</span><span class="logo-sync">Sync</span></a>
+        <p>IoT-powered wearable health monitoring for athletes and performance teams.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="health-monitor.html">Health Monitor</a></li>
+          <li><a href="analysis.html">Analysis</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Social</h4>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/></svg>Twitter</a>
+          <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>GitHub</a>
+        </div>
+      </div>
+      <div class="footer-newsletter footer-col">
+        <h4>Stay Updated</h4>
+        <form onsubmit="event.preventDefault();">
+          <input type="email" placeholder="your@email.com" aria-label="Email" required>
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 VitalSync Team. All rights reserved.</p>
+      <div class="footer-bottom-links"><a href="#">Privacy</a><a href="#">Terms</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/nav.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/api.js"></script>
+<script src="js/chatbot.js"></script>
+</body>
+</html>

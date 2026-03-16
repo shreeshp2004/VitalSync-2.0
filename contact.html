@@ -1,0 +1,295 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VitalSync | Get In Touch</title>
+  <meta name="description" content="Contact the VitalSync team — early access inquiries, partnerships, technical questions or press. We'd love to hear from you.">
+  <meta property="og:title" content="VitalSync | Get In Touch">
+  <meta property="og:description" content="Reach out about early access, partnerships, or technical questions.">
+  <link rel="canonical" href="contact.html">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages/contact.css">
+  <link rel="stylesheet" href="css/chatbot.css">
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar dark-default" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-vital">Vital</span><span class="logo-sync">Sync</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a><a href="features.html">Features</a>
+      <a href="health-monitor.html">Health Monitor</a><a href="analysis.html">Analysis</a><a href="live-sensor.html">&#9889; Live</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+    </div>
+    <a href="contact.html" class="btn btn-nav-cta">Get Early Access</a>
+    <button class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="nav-overlay" role="dialog" aria-modal="true">
+  <nav class="nav-overlay-links">
+    <a href="index.html">Home</a><a href="features.html">Features</a>
+    <a href="health-monitor.html">Health Monitor</a><a href="analysis.html">Analysis</a><a href="live-sensor.html">&#9889; Live</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+  </nav>
+  <a href="contact.html" class="btn-overlay-cta">Get Early Access</a>
+</div>
+
+<main>
+
+<section class="contact-hero">
+  <div class="container">
+    <span class="section-label" style="color:var(--color-secondary)">Contact Us</span>
+    <h1>Let's talk health tech.</h1>
+    <p>Early access inquiries, partnership opportunities, technical questions or press — we're here.</p>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="contact-grid">
+
+      <!-- Form -->
+      <div class="animate-on-scroll">
+        <div class="contact-form-card">
+          <h2>Send us a message</h2>
+          <p style="font-size:0.875rem;color:rgba(13,13,20,0.55);margin-top:4px;margin-bottom:24px">We reply within 24 hours.</p>
+
+          <!-- Success banner -->
+          <div class="form-success" id="form-success" role="alert" aria-live="polite">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            Message sent! We'll get back to you at your email soon.
+          </div>
+
+          <!-- Error banner -->
+          <div class="form-send-error" id="form-send-error" role="alert" aria-live="polite" style="display:none;background:#fff0f3;border:1px solid #ff4d6d;color:#c00;padding:12px 16px;border-radius:var(--radius-md);font-size:0.875rem;margin-bottom:16px">
+            ⚠️ Could not send your message. Please try again or email us directly at <strong>vitalsync.team@gmail.com</strong>.
+          </div>
+
+          <form id="contact-form" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contact-name">Full Name</label>
+                <input type="text" id="contact-name" name="from_name" class="form-control"
+                       placeholder="Your name" autocomplete="name" required aria-required="true">
+                <span class="form-error" id="err-name">Please enter your name.</span>
+              </div>
+              <div class="form-group">
+                <label for="contact-email">Email Address</label>
+                <input type="email" id="contact-email" name="reply_to" class="form-control"
+                       placeholder="you@example.com" autocomplete="email" required aria-required="true">
+                <span class="form-error" id="err-email">Please enter a valid email.</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-subject">Subject</label>
+              <select id="contact-subject" name="subject" class="form-control" required aria-required="true">
+                <option value="" disabled selected>Choose a topic…</option>
+                <option value="Early Access Request">Early Access</option>
+                <option value="Partnership Inquiry">Partnership</option>
+                <option value="Technical Support">Technical Support</option>
+                <option value="Press / Media">Press / Media</option>
+                <option value="General Inquiry">Other</option>
+              </select>
+              <span class="form-error" id="err-subject">Please select a subject.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-message">Message</label>
+              <textarea id="contact-message" name="message" class="form-control"
+                        placeholder="Tell us what's on your mind…"
+                        required aria-required="true" minlength="20"></textarea>
+              <span class="form-error" id="err-message">Message must be at least 20 characters.</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full" id="submit-btn">
+              Send Message →
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Info panel -->
+      <div class="contact-info animate-on-scroll" data-delay="80">
+        <div>
+          <h3>Get in touch</h3>
+          <p style="color:rgba(13,13,20,0.6);font-size:0.9rem;margin-top:6px">We respond to all enquiries within 24 hours.</p>
+        </div>
+
+        <div class="contact-detail">
+          <div class="contact-detail-item">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            <div>
+              <div class="cdi-label">Email</div>
+              <div class="cdi-val">vitalsync.team@gmail.com</div>
+            </div>
+          </div>
+          <div class="contact-detail-item">
+            <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+            <div>
+              <div class="cdi-label">Response Time</div>
+              <div class="cdi-val">Within 24 hours</div>
+            </div>
+          </div>
+          <div class="contact-detail-item">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+            <div>
+              <div class="cdi-label">Based in</div>
+              <div class="cdi-val">Vellore, India</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map placeholder -->
+        <div class="map-card">
+          <div class="map-placeholder">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+            <p>Vellore, Tamil Nadu, India</p>
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <a href="#" class="btn btn-secondary btn-sm">Twitter / X</a>
+            <a href="#" class="btn btn-secondary btn-sm">GitHub</a>
+            <a href="#" class="btn btn-secondary btn-sm">LinkedIn</a>
+          </div>
+        </div>
+
+        <div style="background:var(--color-surface);border:1px solid var(--color-accent);border-radius:var(--radius-md);padding:20px">
+          <div style="font-weight:600;margin-bottom:8px;font-size:0.9375rem">🚀 Requesting Early Access?</div>
+          <p style="font-size:0.875rem;color:rgba(13,13,20,0.65);line-height:1.6">Select "Early Access" in the subject dropdown. Tell us your sport, training level and what you want to monitor. We prioritise athletes with active training schedules.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo"><span class="logo-vital">Vital</span><span class="logo-sync">Sync</span></a>
+        <p>IoT-powered wearable health monitoring for athletes and performance teams.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="health-monitor.html">Health Monitor</a></li>
+          <li><a href="analysis.html">Analysis</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Social</h4>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/></svg>Twitter</a>
+          <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>GitHub</a>
+        </div>
+      </div>
+      <div class="footer-newsletter footer-col">
+        <h4>Stay Updated</h4>
+        <form onsubmit="event.preventDefault();">
+          <input type="email" placeholder="your@email.com" aria-label="Email" required>
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 VitalSync Team. All rights reserved.</p>
+      <div class="footer-bottom-links"><a href="#">Privacy</a><a href="#">Terms</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/nav.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/api.js"></script>
+<script src="js/chatbot.js"></script>
+<script>
+  /* ── EmailJS Init ──────────────────────────────────────────────────
+   * SETUP INSTRUCTIONS (one-time, 5 minutes):
+   *
+   * 1. Go to https://www.emailjs.com and sign up (free)
+   * 2. Add an Email Service → choose Gmail → connect ddini5410@gmail.com
+   *    Copy the Service ID (e.g. "service_xxxxxxx") → replace EMAILJS_SERVICE_ID below
+   * 3. Create an Email Template with these variables:
+   *      {{from_name}}  — sender's name
+   *      {{reply_to}}   — sender's email
+   *      {{subject}}    — selected topic
+   *      {{message}}    — the message body
+   *    Copy the Template ID → replace EMAILJS_TEMPLATE_ID below
+   * 4. Go to Account → API Keys → copy Public Key → replace EMAILJS_PUBLIC_KEY below
+   * ─────────────────────────────────────────────────────────────────── */
+  const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';    // ← replace
+  const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';   // ← replace
+  const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';    // ← replace
+
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+  /* ── Validation helpers ── */
+  function showError(inputId, errId, show) {
+    const input = document.getElementById(inputId);
+    const err   = document.getElementById(errId);
+    if (input) input.classList.toggle('error', show);
+    if (err)   err.classList.toggle('show', show);
+  }
+
+  function validate() {
+    const name    = document.getElementById('contact-name').value.trim();
+    const email   = document.getElementById('contact-email').value.trim();
+    const subject = document.getElementById('contact-subject').value;
+    const message = document.getElementById('contact-message').value.trim();
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    let valid = true;
+
+    showError('contact-name',    'err-name',    !name);            if (!name)                 valid = false;
+    showError('contact-email',   'err-email',   !emailRe.test(email)); if (!emailRe.test(email))  valid = false;
+    showError('contact-subject', 'err-subject', !subject);         if (!subject)              valid = false;
+    showError('contact-message', 'err-message', message.length < 20); if (message.length < 20)   valid = false;
+
+    return valid;
+  }
+
+  /* ── Form submit ── */
+  document.getElementById('contact-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    const btn        = document.getElementById('submit-btn');
+    const successEl  = document.getElementById('form-success');
+    const errorEl    = document.getElementById('form-send-error');
+    const form       = e.target;
+
+    btn.textContent  = 'Sending…';
+    btn.disabled     = true;
+    errorEl.style.display = 'none';
+
+    try {
+      await emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form);
+      successEl.classList.add('show');
+      form.reset();
+      setTimeout(() => successEl.classList.remove('show'), 8000);
+    } catch (err) {
+      console.error('EmailJS error:', err);
+      errorEl.style.display = 'block';
+    } finally {
+      btn.textContent = 'Send Message →';
+      btn.disabled    = false;
+    }
+  });
+
+  /* ── Live validation on blur ── */
+  ['contact-name','contact-email','contact-subject','contact-message'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('blur', () => validate());
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+/* ============================================================
+   about.css
+   ============================================================ */
+
+.about-hero {
+  background: var(--color-dark);
+  padding: 130px 0 80px;
+  text-align: center;
+}
+
+.about-hero h1 { color: var(--color-white); margin-bottom: 16px; }
+.about-hero p  { color: rgba(255,255,255,0.6); max-width: 560px; margin: 0 auto; font-size: 1.0625rem; }
+
+/* Problem section */
+.problem-section { padding: 96px 0; }
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 72px;
+  align-items: center;
+}
+
+.problem-stat {
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.problem-stat-label {
+  font-size: 1.125rem;
+  color: rgba(13,13,20,0.7);
+  margin-bottom: 24px;
+}
+
+.problem-text p {
+  font-size: 1rem;
+  color: rgba(13,13,20,0.7);
+  margin-bottom: 18px;
+  line-height: 1.75;
+}
+
+/* Hardware section */
+.hardware-section {
+  background: var(--color-dark);
+  padding: 96px 0;
+  text-align: center;
+}
+
+.hardware-section h2 { color: var(--color-white); margin-bottom: 16px; }
+.hardware-section > .container > p { color: rgba(255,255,255,0.55); margin-bottom: 48px; }
+
+.hw-diagram-wrap {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(184,188,239,0.1);
+  border-radius: var(--radius-xl);
+  padding: 48px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Tech stack */
+.tech-section { background: var(--color-surface); padding: 96px 0; }
+.tech-section h2 { text-align: center; margin-bottom: 48px; }
+
+.tech-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+.tech-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+}
+
+.tech-card h3 { margin-bottom: 14px; }
+.tech-card p { font-size: 0.9rem; color: rgba(13,13,20,0.65); margin-bottom: 16px; }
+
+.tech-tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.tech-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  background: rgba(91,91,214,0.08);
+  color: var(--color-primary);
+  border-radius: 100px;
+  border: 1px solid rgba(91,91,214,0.2);
+}
+
+/* Roadmap */
+.roadmap-section { padding: 96px 0; }
+.roadmap-section h2 { text-align: center; margin-bottom: 48px; }
+
+.roadmap-timeline {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  position: relative;
+}
+
+.roadmap-timeline::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: 60px;
+  right: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+}
+
+.roadmap-item {
+  position: relative;
+  padding-top: 56px;
+}
+
+.roadmap-dot {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 3px solid white;
+  box-shadow: 0 0 0 3px var(--color-primary);
+  z-index: 1;
+}
+
+.roadmap-dot.future {
+  background: rgba(91,91,214,0.25);
+  border-color: rgba(184,188,239,0.3);
+  box-shadow: 0 0 0 3px rgba(184,188,239,0.2);
+}
+
+.roadmap-version {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+
+.roadmap-item h4  { font-size: 1rem; margin-bottom: 10px; }
+.roadmap-item ul  { display: flex; flex-direction: column; gap: 6px; }
+.roadmap-item li  { font-size: 0.8375rem; color: rgba(13,13,20,0.65); position: relative; padding-left: 14px; }
+.roadmap-item li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+@media (max-width: 1023px) {
+  .problem-grid  { grid-template-columns: 1fr; gap: 40px; }
+  .tech-cards    { grid-template-columns: 1fr; }
+  .roadmap-timeline { grid-template-columns: 1fr 1fr; }
+  .roadmap-timeline::before { display: none; }
+  .roadmap-item { padding-top: 0; }
+  .roadmap-dot { display: none; }
+}
+
+@media (max-width: 767px) {
+  .roadmap-timeline { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+vitalsync-backend/node_modules/
+
+# Environment secrets — NEVER commit these
+.env
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Temp / build
+C:/temp/
+C:/pgsql16/
+C:/pgdata16/
+/tmp/
+
+# PostgreSQL data dir
+pgdata/
+
+# Test output
+coverage/
+.nyc_output/
